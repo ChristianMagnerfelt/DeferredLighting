@@ -8,7 +8,7 @@
 
 // OpenGL
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 // Cg
 #include <Cg/cg.h>
@@ -20,7 +20,7 @@
 // Add libraries
 #pragma comment (lib , "cg.lib")
 #pragma comment (lib , "cgGL.lib")
-#pragma comment (lib , "glut32.lib")
+#pragma comment (lib , "freeglut.lib")
 #pragma comment (lib , "glew32.lib")
 
 ///////// Global constants
@@ -38,8 +38,11 @@ GLuint gBufferDepthId;
 ///////// Forward declarations
 void display();
 void reshape(int width, int height);
+void idle();
+void keyboard(unsigned char key, int x , int y);
 void initFrameBufferObject(int width, int height);
 void releaseFrameBufferObject();
+void cleanUp();
 void checkGLErrors(const char * action);
 
 int main(int argc, char * argv [])
@@ -57,9 +60,11 @@ int main(int argc, char * argv [])
 	}
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
-
+	glutIdleFunc(idle);
+	glutKeyboardFunc(keyboard);
 	initFrameBufferObject(::currentScreenWidth,::currentScreenHeight);
 	glutMainLoop();
+	releaseFrameBufferObject();
 	return 0;
 }
 
@@ -71,6 +76,22 @@ void reshape(int width, int height)
 {
 	// Force same width and height on resize
 	glutReshapeWindow(::currentScreenWidth,::currentScreenHeight); 
+}
+void idle()
+{
+	glutPostRedisplay();
+}
+void keyboard(unsigned char key, int x , int y)
+{
+	switch(key)
+	{
+	case (27) :		// Exit when ESC is pressed
+		cleanUp();
+		glutLeaveMainLoop();
+		break;
+	default:
+		break;
+	}
 }
 void initFrameBufferObject(int width, int height)
 {
@@ -120,9 +141,14 @@ void initFrameBufferObject(int width, int height)
 }
 void releaseFrameBufferObject()
 {
-
+	glDeleteFramebuffersEXT(1,&fboId);
+	glDeleteTextures(1,&gBufferId);
+	glDeleteTextures(1,&gBufferDepthId);
 }
-
+void cleanUp()
+{
+	releaseFrameBufferObject();
+}
 //////// Error handling function definitions
 void checkGLErrors(const char * action)
 {
