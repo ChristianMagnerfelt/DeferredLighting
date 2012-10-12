@@ -1,0 +1,48 @@
+
+
+void baseVP(float4	position	: POSITION,
+			float4	normal		: NORMAL,
+
+		out	float4	oPosition	: POSITION,
+		out float4	oNormal		: TEXCOORD0,
+
+	uniform	float4x4 modelViewProj,
+	uniform float4x4 modelview)
+{
+	oPosition = mul(modelviewProj, position);
+	oNormal	= mul(modelView, normal);
+}
+
+void baseFP(float4	normal			: TEXCOORD0,
+				
+				out float4	normalSpecExp	: COLOR0,
+
+			uniform float	specularExp)
+{
+	normalSpecExp = normalize(normal);
+	normalSpecExp.w = specularExp;
+}
+
+void lightingVP(float4	position	: POSITION,
+				float2	texCoord	: TEXCOORD0,
+			out float4	oPosition	: Position,
+			out float2	oTexCoord)
+{
+	oPosition = position;
+	oTexCoord = texCoord;
+}
+
+void lightingFP()
+{}
+
+void finalVP(float4	position	: POSITION,
+			float2	texCoord	: TEXCOORD0,
+		out	float4	oPosition	: Position,
+		out float2	oTexCoord)
+{
+	oPosition = position;
+	oTexCoord = texCoord;
+}
+
+void finalFP()
+{}

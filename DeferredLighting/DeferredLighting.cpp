@@ -8,6 +8,8 @@
  *	\copyright	GNU Public License
  */
 
+#pragma once
+
 #include <GL/glew.h>				 //!< OpenGL EXT support
 #include <GL/freeglut.h>			 //!<  Window management library
 #include <Cg/cg.h>					 //!<  CG Run-Time Library API
@@ -30,8 +32,8 @@ CGprofile cgVertexProfile;
 CGprofile cgFragmentProfile;
 
 // Our vertex and fragment programs used for this demo
-CGprogram cgVertexProgram;
-CGprogram cgFragmentProgram;
+CGprogram cgBasePassVP;
+CGprogram cgBasePassFP;
 
 /*!
  * Forward declarations
@@ -194,28 +196,29 @@ void shaderSetup()
 	// CG parameters will update immediately
 	cgSetParameterSettingMode(cgContext, CG_IMMEDIATE_PARAMETER_SETTING);
 
-	// Set up vertex profile & program
+	// Set up vertex & fragment profiles
 	cgVertexProfile = cgGLGetLatestProfile(CG_GL_VERTEX);					
 	cgGLSetOptimalOptions(cgVertexProfile);
 	checkForCgError("Selecting Vertex Profile");
 
-	cgVertexProgram = cgCreateProgramFromFile(cgContext, CG_SOURCE, "DeferredLightingShaders.cg", 
-											  cgVertexProfile, "blinnPhongVTF", NULL);																
-	checkForCgError("Creating Vertex Program");
-
-	cgGLLoadProgram(cgVertexProgram);
-	checkForCgError("Loading Vertex Program");
-
-	// Set up fragment profile & program
 	cgFragmentProfile = cgGLGetLatestProfile(CG_GL_FRAGMENT);					
 	cgGLSetOptimalOptions(cgFragmentProfile);
 	checkForCgError("Selecting Fragment Profile");
 
-	cgFragmentProgram = cgCreateProgramFromFile(cgContext, CG_SOURCE, "DeferredLightingShaders.cg",											
-												cgVertexProfile, "blinnPhongFTB", NULL);																
+	// Set up vertex & fragment programs
+	cgBasePassVP = cgCreateProgramFromFile(cgContext, CG_SOURCE, "DeferredLightingShaders.cg", 
+											  cgVertexProfile, "baseVP", NULL);																
+	checkForCgError("Creating Vertex Program");
+
+	cgBasePassFP = cgCreateProgramFromFile(cgContext, CG_SOURCE, "DeferredLightingShaders.cg",											
+												cgVertexProfile, "baseVP", NULL);																
 	checkForCgError("Creating Fragment Program");
 
-	cgGLLoadProgram(cgFragmentProgram);
+	// Load vertex & fragment programs
+	cgGLLoadProgram(cgBasePassVP);
+	checkForCgError("Loading Vertex Program");
+
+	cgGLLoadProgram(cgBasePassFP);
 	checkForCgError("Loading Fragment Program");
 }
 
