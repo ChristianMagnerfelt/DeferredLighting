@@ -8,20 +8,11 @@
  *	\copyright	GNU Public License
  */
 
-#pragma once
-
 #include <GL/glew.h>				 //!< OpenGL EXT support
 #include <GL/freeglut.h>			 //!<  Window management library
 #include <Cg/cg.h>					 //!<  CG Run-Time Library API
 #include <Cg/cgGL.h>				 //!<  CGGL Run-Time Library API
 #include <iostream>					 //!<  Standard IO interface
-
-// Required libraries
-#pragma comment (lib , "cg.lib")
-#pragma comment (lib , "cgGL.lib")
-#pragma comment (lib , "freeglut.lib")
-#pragma comment (lib , "glew32.lib")
-
 
 inline int getDefaultScreenWidth(){return 800; } const
 inline int getDefaultScreenHeight(){return 600; } const
